@@ -1,0 +1,68 @@
+# AI Trading Bot Configuration
+
+# Trading settings
+trading:
+  mode: "paper"  # paper, live
+  base_currency: "USDT"
+  initial_balance: 10000
+  max_position_size: 0.1  # 10% of portfolio
+  stop_loss: 0.02  # 2%
+  take_profit: 0.05  # 5%
+  max_daily_trades: 50
+
+# Data sources
+data_sources:
+  primary: "binance"  # binance, coinbase, kraken
+  backup: "alpha_vantage"
+  update_interval: 60  # seconds
+
+# AI Model settings
+models:
+  prediction_model:
+    type: "lstm"  # lstm, transformer, xgboost
+    lookback_window: 100
+    prediction_horizon: 24  # hours
+    retrain_frequency: 24  # hours
+  
+  risk_model:
+    type: "var"  # var, cvar, monte_carlo
+    confidence_level: 0.95
+    time_horizon: 1  # day
+
+# API Configuration
+apis:
+  binance:
+    base_url: "https://api.binance.com"
+    testnet_url: "https://testnet.binance.vision"
+    rate_limit: 1200  # requests per minute
+  
+  alpha_vantage:
+    base_url: "https://www.alphavantage.co/query"
+    rate_limit: 5  # requests per minute
+
+# Database
+database:
+  type: "postgresql"  # postgresql, sqlite
+  host: "localhost"
+  port: 5432
+  name: "trading_bot"
+  pool_size: 10
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "logs/trading_bot.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# Monitoring
+monitoring:
+  enable_metrics: true
+  metrics_port: 8000
+  health_check_interval: 30  # seconds
+
+# Security
+security:
+  encrypt_api_keys: true
+  session_timeout: 3600  # seconds
+  max_login_attempts: 3
