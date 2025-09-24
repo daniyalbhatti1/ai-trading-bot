@@ -379,33 +379,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **The authors and contributors are not responsible for any financial losses incurred through the use of this software. Use at your own risk.**
 
-## 📞 Support & Community
-
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- **Documentation**: [Wiki](https://github.com/your-repo/wiki)
-- **Discord**: [Community Server](https://discord.gg/your-server)
-
-## 🗺️ Roadmap
-
-### Short Term (Q1 2024)
-- [ ] Web-based dashboard
-- [ ] Mobile app integration
-- [ ] Advanced portfolio optimization
-- [ ] Social trading features
-
-### Medium Term (Q2-Q3 2024)
-- [ ] Multi-asset support (stocks, forex, commodities)
-- [ ] Cloud deployment options
-- [ ] Advanced risk management tools
-- [ ] Machine learning model marketplace
-
-### Long Term (Q4 2024+)
-- [ ] Institutional-grade features
-- [ ] Regulatory compliance tools
-- [ ] Advanced analytics platform
-- [ ] AI-powered market research
-
----
-
-**Built with ❤️ for the trading community. Happy Trading! 🚀📈**
