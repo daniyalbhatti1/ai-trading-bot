@@ -1,0 +1,44 @@
+universe:
+  - SPY
+  - QQQ
+  - GLD
+  - USO
+
+bars:
+  interval: "1Min"         # trading loop cadence
+  history_interval: "1m"   # yfinance backfill interval
+  history_period: "7d"     # max 7 days for 1-minute data
+
+risk:
+  max_positions: 4
+  dollar_risk_per_trade: 200
+  stop_loss_pct: 0.015      # 1.5% stop loss
+  take_profit_pct: 0.03     # 3% first take profit (2:1 reward/risk)
+  take_profit_2_pct: 0.06   # 6% second take profit (4:1 reward/risk)
+  partial_profit_pct: 0.50  # Take 50% profit at first TP
+  move_sl_to_breakeven: true  # Move SL to entry when first TP hit
+
+sizing:
+  fixed_qty: 10
+
+strategy:
+  confidence_min: 0.50      # minimum confidence to take trades
+  ml_confidence_min: 0.60   # minimum ML model confidence
+  indicators:
+    rsi_period: 14          # standard RSI period
+    ema_fast: 9             # fast EMA for trend
+    ema_slow: 21            # slow EMA for trend
+    macd_fast: 12           # MACD fast line
+    macd_slow: 26           # MACD slow line
+    macd_signal: 9          # MACD signal line
+  thresholds:
+    rsi_oversold: 30        # RSI oversold level
+    rsi_overbought: 70      # RSI overbought level
+    rsi_extreme_oversold: 25  # strong oversold
+    rsi_extreme_overbought: 75  # strong overbought
+
+dashboard:
+  port: 8501
+
+api:
+  port: 8000

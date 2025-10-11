@@ -1,381 +1,216 @@
-# Advanced AI Trading Bot
+# 📈 AI-Powered Algorithmic Trading Bot
 
-A sophisticated, production-ready AI trading bot that combines cutting-edge machine learning models with advanced trading strategies. Built with Lumibot framework for institutional-grade paper trading and backtesting capabilities.
+A fully automated algorithmic trading bot that trades SPY, QQQ, GLD, and USO using technical analysis combined with machine learning. Built with Python, LightGBM, Alpaca API for paper trading, and Streamlit for real-time monitoring.
 
-## 🚀 Key Features
+## 🎯 Features
 
-### 📊 Multi-Asset Trading Support
-- **🪙 Cryptocurrency Trading**: Bitcoin, Ethereum, and 50+ altcoins via Binance
-- **📈 Stock Trading**: Major stocks, ETFs, and indices via Alpaca
-- **🔄 Easy Asset Switching**: Switch between crypto and stocks with one command
-- **⏰ Flexible Trading Hours**: 24/7 crypto trading or market hours for stocks
+- **ML-Enhanced Signal Generation**: LightGBM model validates trades with 60%+ confidence threshold
+- **Technical Analysis Foundation**: RSI, EMA, MACD indicators for signal generation
+- **Mean Reversion + Trend Following**: Combined strategy for high-probability setups
+- **Adaptive Learning System**: Trade journal automatically improves model over time
+- **Paper Trading**: Safe testing with Alpaca's paper trading API
+- **Real-time Dashboard**: Streamlit dashboard for monitoring performance
+- **Automated Execution**: Stop-loss and take-profit management
+- **Backtesting Engine**: Test strategies on historical data
+- **Multi-Symbol Support**: Trade multiple symbols simultaneously
 
-### 🤖 Optimized AI/ML Models
-- **Fast Super Ensemble**: Lightweight XGBoost + LightGBM combination
-- **Smart Feature Engineering**: 50+ technical indicators optimized for performance
-- **Lazy Loading**: Models load only when needed for faster startup
-- **Intelligent Caching**: Compressed serialization and parallel processing
+## 📊 Trading Strategy
 
-### 📈 Mean Reversion Strategy
-- **Statistical Analysis**: Z-scores, Bollinger Bands, and RSI indicators
-- **Risk Management**: Stop-loss, take-profit, and position sizing
-- **Confidence Filtering**: Only trades with high signal strength and confidence
-- **Adaptive Parameters**: Optimized for both crypto and stock markets
+The bot combines rule-based technical analysis with machine learning for signal validation:
 
-### 🛡️ Enterprise-Grade Risk Management
-- **VaR/CVaR**: Value at Risk and Conditional Value at Risk calculations
-- **Monte Carlo Simulations**: 10,000+ scenario stress testing
-- **Portfolio Optimization**: Modern Portfolio Theory with risk constraints
-- **Dynamic Position Sizing**: Kelly Criterion and volatility-adjusted sizing
+### **Signal Generation (Technical Analysis)**
 
-### 🔧 Production-Ready Infrastructure
-- **Lumibot Integration**: Professional backtesting and paper trading framework
-- **Real-time Data**: WebSocket connections for live market data
-- **Advanced Configuration**: Environment-based config with validation
-- **Comprehensive Logging**: Structured logging with performance metrics
-- **Monitoring & Alerts**: Real-time performance tracking and notifications
+**1. Mean Reversion (Primary)**
+- **Extreme RSI**: Trades RSI < 25 (oversold) and RSI > 75 (overbought)
+- **Rule Confidence**: 75%+ for extreme mean reversion setups
 
-## 📁 Project Architecture
+**2. Trend-Aligned Mean Reversion**
+- **Pullback Entries**: Buys pullbacks in uptrends, sells rallies in downtrends
+- **EMA Confirmation**: 9/21 EMA crossovers define trend direction
+- **Rule Confidence**: 65-85% based on trend strength
 
-```
-ai-trading-bot/
-├── src/
-│   ├── models/                    # ML Model Implementations
-│   │   ├── base_model.py         # Abstract base class
-│   │   ├── lstm_model.py         # LSTM with attention
-│   │   ├── transformer_model.py  # Transformer architecture
-│   │   ├── xgboost_model.py      # XGBoost with feature engineering
-│   │   ├── ensemble_model.py     # Model ensemble framework
-│   │   ├── feature_engineering.py # Advanced feature creation
-│   │   └── model_factory.py      # Model creation and management
-│   ├── strategies/               # Trading Strategy Implementations
-│   │   ├── base_strategy.py      # Abstract strategy base
-│   │   ├── mean_reversion_strategy.py # Statistical arbitrage
-│   │   ├── momentum_strategy.py  # Trend following
-│   │   ├── arbitrage_strategy.py # Multi-type arbitrage
-│   │   └── strategy_factory.py   # Strategy management
-│   ├── config/                   # Configuration Management
-│   │   ├── config.py            # Advanced config system
-│   │   └── __init__.py
-│   ├── utils/                    # Utility Functions
-│   │   ├── logger.py            # Logging setup
-│   │   ├── data_manager.py      # Data handling
-│   │   ├── risk_manager.py      # Risk management
-│   │   └── performance_tracker.py # Performance analytics
-│   └── main.py                  # Main application entry point
-├── config/
-│   └── config.yaml              # Main configuration file
-├── requirements.txt             # Python dependencies
-├── env.example                  # Environment variables template
-└── README.md                   # This file
-```
+**3. Trend Following with Momentum**
+- **MACD + EMA**: Both must align for trend continuation
+- **Not Overbought/Oversold**: Avoids extremes (RSI 40-60 range)
+- **Rule Confidence**: 60-80%
 
-## 🛠️ Installation & Setup
+### **ML Validation (LightGBM)**
 
-### Prerequisites
-- Python 3.8+
-- Git
-- Virtual environment (recommended)
+Every signal is validated by a trained LightGBM model that:
+- Analyzes 20+ technical features (RSI, EMA, MACD, volume, volatility, etc.)
+- Predicts probability of profitable trade outcome
+- **Requires 60%+ ML confidence** to execute trades
+- Continuously learns from trade outcomes via trade journal
 
-### 1. Clone and Setup
-```bash
-git clone <your-repo-url>
-cd ai-trading-bot
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-### 2. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Configure Environment
-```bash
-cp env.example .env
-# Edit .env with your API keys and settings
-```
-
-### 4. Choose Your Asset Class
-```bash
-# For cryptocurrency trading (24/7)
-python switch_asset_class.py crypto
-
-# For stock trading (market hours)
-python switch_asset_class.py stocks
-
-# Check current configuration
-python switch_asset_class.py status
-```
-
-### 5. Configure Trading Parameters
-Edit `config/config.yaml` to customize:
-- Model parameters and hyperparameters
-- Trading strategy settings
-- Risk management thresholds
-- Data sources and update frequencies
+### **Risk Management**
+- **Stop Loss**: 1.5% automatic stop loss on all positions
+- **Take Profit**: 3% first target (2:1 R/R), 6% second target (4:1 R/R)
+- **Partial Profits**: 50% position closed at first target, stop moved to breakeven
+- **Position Sizing**: Fixed quantity per trade (configurable)
+- **Max Positions**: 4 concurrent positions maximum
 
 ## 🚀 Quick Start
 
-### Choose Your Asset Class
+### **Prerequisites**
+- Python 3.11+
+- Alpaca Paper Trading Account (free)
+
+### **Installation**
+
 ```bash
-# For cryptocurrency trading (24/7)
-python switch_asset_class.py crypto
-
-# For stock trading (market hours)  
-python switch_asset_class.py stocks
-
-# Check current configuration
-python switch_asset_class.py status
-```
-
-### Paper Trading (Recommended)
-```bash
-python src/main.py paper
-```
-
-### Backtesting
-```bash
-python src/main.py backtest
-```
-
-### Demo Asset Switching
-```bash
-python demo_asset_switching.py
-```
-
-## 🤖 AI Models Deep Dive
-
-### LSTM Model
-- **Architecture**: Multi-layer LSTM with attention mechanism
-- **Features**: Dropout, batch normalization, regularization
-- **Optimization**: Adam optimizer with learning rate scheduling
-- **Hyperparameter Tuning**: Optuna-based optimization
-
-### Transformer Model
-- **Architecture**: Multi-head attention with positional encoding
-- **Features**: Self-attention, feed-forward networks, layer normalization
-- **Optimization**: Advanced attention mechanisms for time series
-- **Interpretability**: Attention weight visualization
-
-### Ensemble Model
-- **Combination**: Weighted average, stacking, and voting methods
-- **Optimization**: Dynamic weight adjustment based on performance
-- **Robustness**: Multiple model types for diverse predictions
-- **Performance**: Superior to individual models
-
-## 📈 Trading Strategies Explained
-
-### Mean Reversion Strategy
-- **Z-Score Analysis**: Statistical deviation from mean
-- **Bollinger Bands**: Price channel analysis
-- **RSI Divergence**: Momentum confirmation
-- **Cointegration**: Pairs trading opportunities
-- **Half-Life**: Mean reversion speed estimation
-
-### Momentum Strategy
-- **MACD Signals**: Trend change detection
-- **ADX Filter**: Trend strength confirmation
-- **Breakout Detection**: Volume-confirmed breakouts
-- **Multi-Timeframe**: Trend alignment across timeframes
-- **Risk Management**: Dynamic stop-loss and take-profit
-
-### Arbitrage Strategy
-- **Exchange Arbitrage**: Cross-exchange price differences
-- **Triangular Arbitrage**: Three-currency profit opportunities
-- **Statistical Arbitrage**: Cointegrated pairs trading
-- **Latency Optimization**: High-frequency execution
-- **Risk Controls**: Maximum exposure limits
-
-## 🔧 Advanced Configuration
-
-### Model Configuration
-```yaml
-models:
-  - name: "ensemble_model"
-    type: "ensemble"
-    base_models: ["lstm", "xgboost", "catboost"]
-    ensemble_method: "weighted_average"
-    optimize_weights: true
-    hyperparameter_optimization: true
-```
-
-### Strategy Configuration
-```yaml
-strategies:
-  - name: "mean_reversion"
-    type: "mean_reversion"
-    zscore_threshold: 2.0
-    lookback_period: 20
-    use_cointegration: true
-    use_half_life: true
-```
-
-### Risk Management
-```yaml
-risk_management:
-  max_position_size: 0.1
-  stop_loss: 0.02
-  take_profit: 0.05
-  max_drawdown: 0.15
-  var_confidence_level: 0.95
-  monte_carlo_simulations: 10000
-```
-
-## 📊 Performance Metrics
-
-### Trading Metrics
-- **Total Return**: Portfolio performance over time
-- **Sharpe Ratio**: Risk-adjusted returns
-- **Maximum Drawdown**: Largest peak-to-trough decline
-- **Win Rate**: Percentage of profitable trades
-- **Profit Factor**: Gross profit / Gross loss
-- **Calmar Ratio**: Annual return / Maximum drawdown
-
-### Model Metrics
-- **RMSE/MAE**: Prediction accuracy
-- **Directional Accuracy**: Correct trend prediction
-- **R² Score**: Model fit quality
-- **Cross-Validation**: Out-of-sample performance
-- **Feature Importance**: Model interpretability
-
-## 🔒 Security & Risk Management
-
-### API Security
-- Encrypted API key storage
-- Rate limiting and request throttling
-- Secure credential management
-- Session timeout controls
-
-### Trading Risk Controls
-- Position size limits
-- Maximum daily trades
-- Stop-loss and take-profit orders
-- Portfolio-level risk monitoring
-- Real-time risk alerts
-
-### Data Security
-- Encrypted data storage
-- Secure data transmission
-- Access control and authentication
-- Audit logging
-
-## 🧪 Testing & Validation
-
-### Unit Testing
-```bash
-pytest tests/unit/ -v
-```
-
-### Integration Testing
-```bash
-pytest tests/integration/ -v
-```
-
-### Backtesting
-```bash
-python scripts/backtest.py --strategy ensemble --start-date 2020-01-01 --end-date 2023-12-31
-```
-
-### Performance Testing
-```bash
-python scripts/performance_test.py --models all --strategies all
-```
-
-## 📊 Monitoring & Analytics
-
-### Real-time Monitoring
-- Portfolio performance tracking
-- Model prediction accuracy
-- Strategy signal generation
-- Risk metric monitoring
-- System health checks
-
-### Performance Analytics
-- Detailed performance reports
-- Risk-adjusted return analysis
-- Drawdown analysis
-- Trade analysis and statistics
-- Model performance comparison
-
-### Alerting System
-- Performance threshold alerts
-- Risk limit breaches
-- System error notifications
-- Model degradation warnings
-- Market condition changes
-
-## 🚀 Deployment Options
-
-### Local Development
-- Paper trading with Alpaca
-- Backtesting with historical data
-- Model training and validation
-- Strategy optimization
-
-### Cloud Deployment
-- AWS/GCP/Azure deployment
-- Containerized with Docker
-- Kubernetes orchestration
-- Auto-scaling capabilities
-
-### Production Trading
-- Live trading with proper risk controls
-- Multi-exchange connectivity
-- High-frequency execution
-- Institutional-grade infrastructure
-
-## 📚 Advanced Features
-
-### Feature Engineering
-- 100+ technical indicators
-- Statistical features (skewness, kurtosis)
-- Fourier transform features
-- Wavelet analysis
-- Volume profile analysis
-- Sentiment analysis integration
-
-### Model Optimization
-- Hyperparameter tuning with Optuna
-- Cross-validation strategies
-- Feature selection algorithms
-- Model ensemble optimization
-- Online learning capabilities
-
-### Risk Management
-- Value at Risk (VaR) calculations
-- Conditional VaR (CVaR)
-- Monte Carlo stress testing
-- Scenario analysis
-- Portfolio optimization
-- Dynamic hedging strategies
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Setup
-```bash
-git clone <repo-url>
+# Clone the repository
+git clone <your-repo-url>
 cd ai-trading-bot
-pip install -r requirements-dev.txt
-pre-commit install
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-### Code Quality
-- Black code formatting
-- Flake8 linting
-- MyPy type checking
-- Pytest testing
-- Pre-commit hooks
+### **Configuration**
+
+1. **Create `.env` file** in the project root:
+```env
+ALPACA_API_KEY_ID=your_key_here
+ALPACA_API_SECRET=your_secret_here
+ALPACA_BASE_URL=https://paper-api.alpaca.markets
+```
+
+Get your free Alpaca API keys from https://alpaca.markets
+
+2. **Adjust `config.yaml`** (optional):
+```yaml
+universe:
+  - SPY
+  - QQQ
+  - GLD
+  - USO
+
+risk:
+  max_positions: 4
+  stop_loss_pct: 0.015      # 1.5%
+  take_profit_pct: 0.03     # 3%
+  take_profit_2_pct: 0.06   # 6%
+
+strategy:
+  confidence_min: 0.50      # Minimum rule confidence
+  ml_confidence_min: 0.60   # Minimum ML model confidence
+```
+
+### **Usage**
+
+1. **Initialize Database**
+```bash
+python3 scripts/init_db.py
+```
+
+2. **Backfill Historical Data**
+```bash
+python3 scripts/backfill.py --symbols SPY QQQ GLD USO --period 7d
+```
+
+3. **Train ML Model** (or use pre-trained model in `trained_models/lgbm.pkl`)
+```bash
+python3 scripts/train_lgbm.py
+```
+
+4. **Run Backtest** (optional - test strategy first)
+```bash
+python3 scripts/quick_backtest.py --symbols SPY QQQ GLD USO
+```
+
+5. **Start Paper Trading**
+```bash
+python3 main.py
+# or use the full system with API server:
+python3 start_trading.py
+```
+
+6. **Launch Dashboard** (in a separate terminal)
+```bash
+streamlit run app/dashboard/app.py
+```
+Dashboard opens at `http://localhost:8501`
+
+## 📱 Dashboard Features
+
+- 📊 **Equity Curve**: Track account equity over time
+- 💼 **Open Positions**: Monitor current positions and P&L
+- 📋 **Order History**: View all executed orders
+- 🎯 **Trading Signals**: Recent buy/sell signals
+- 📈 **Performance Metrics**: Win rate, profit factor, Sharpe ratio
+- ⏯️ **Trading Controls**: Start/pause/resume/stop trading
+
+## 🔧 Project Structure
+
+```
+ai-trading-bot/
+├── app/
+│   ├── api/              # FastAPI server
+│   ├── backtest/         # Backtesting engine
+│   ├── core/             # Settings, logger, utils
+│   ├── dashboard/        # Streamlit dashboard
+│   ├── data/             # Database management
+│   ├── ingestion/        # Data ingestion (Alpaca, yfinance)
+│   ├── jobs/             # Scheduled tasks
+│   ├── learning/         # Trade journal & ML learning system
+│   ├── models/           # LightGBM ML model
+│   ├── signals/          # Technical indicators & trading rules
+│   └── trading/          # Broker integration & execution
+├── scripts/              # Utility scripts (backfill, train, backtest)
+├── trained_models/       # Trained ML models
+├── config.yaml           # Trading configuration
+├── main.py               # Main entry point
+└── requirements.txt      # Dependencies
+```
+
+## 📈 Performance Metrics
+
+- **Equity Curve**: Real-time account value
+- **Win Rate**: Percentage of profitable trades
+- **Profit Factor**: Ratio of gross profit to gross loss
+- **Sharpe Ratio**: Risk-adjusted returns
+- **Max Drawdown**: Largest peak-to-trough decline
+
+## 🤖 Machine Learning Model
+
+**LightGBM Classifier**
+- **Input Features**: 20+ technical indicators and price patterns
+- **Training Data**: Historical trades with known outcomes
+- **Validation**: Cross-validation with time series splits
+- **Retraining**: Automatic retraining from trade journal entries
+- **Confidence Threshold**: 60% minimum for trade execution
+
+## 📚 Technical Features
+
+The ML model analyzes these features for every trade signal:
+
+- **RSI (14)**: Relative Strength Index for overbought/oversold levels
+- **EMA (9/21)**: Exponential Moving Averages for trend identification
+- **MACD (12/26/9)**: Moving Average Convergence Divergence for momentum
+- **ATR (14)**: Average True Range for volatility measurement
+- **Volume Indicators**: Volume trends and anomalies
+- **Price Patterns**: Support/resistance, highs/lows, price momentum
+- **Cross-symbol Correlation**: Market-wide signals from SPY, QQQ
+
+
+## 🛡️ Risk Disclaimer
+
+**⚠️ FOR EDUCATIONAL AND PAPER TRADING PURPOSES ONLY**
+
+- Never risk money you can't afford to lose
+- Past performance does not guarantee future results
+- Always test thoroughly with paper trading first
+- Trading involves substantial risk of loss
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see LICENSE file for details
 
-## ⚠️ Important Disclaimers
-
-**This software is for educational and research purposes only. Trading financial instruments involves substantial risk of loss and is not suitable for all investors. Past performance is not indicative of future results. Always do your own research and consider consulting with a financial advisor before making investment decisions.**
-
-**The authors and contributors are not responsible for any financial losses incurred through the use of this software. Use at your own risk.**
-
+---
